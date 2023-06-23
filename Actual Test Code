@@ -12,3 +12,7 @@ edge_options = webdriver.EdgeOptions()
 #Initialize the Edge driver
 driver = webdriver.Edge(executable_path=edgedriver_path, options=edge_options)
 
+#list of target websites
+websites = ['https://www.bing.com/shop?FORM=SHOPTB']
+
+
