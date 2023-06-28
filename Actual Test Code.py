@@ -13,6 +13,8 @@ edge_options = webdriver.EdgeOptions()
 driver = webdriver.Edge(executable_path=edgedriver_path, options=edge_options)
 
 #list of target websites
-websites =
+websites = 
+
+
 
 
