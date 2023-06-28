@@ -1,4 +1,4 @@
-import pandas as pd
+
 
 # Read manufacturer codes from Excel file
 excel_file_path = 'manufacturer_codes.xlsx'  # Update with your Excel file path
