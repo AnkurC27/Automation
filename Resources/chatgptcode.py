@@ -5,7 +5,7 @@ import pandas as pd
 from selenium import webdriver
 
 # Set the path to the EdgeDriver executable
-edgedriver_path = '/path/to/msedgedriver'  # Replace with the actual path to msedgedriver
+edgedriver_path = 'C:\Users\ankur.chadha\desktop\msedgedriver'  # Replace with the actual path to msedgedriver
 
 # Set up the Edge options
 edge_options = webdriver.EdgeOptions()
@@ -16,23 +16,29 @@ edge_options = webdriver.EdgeOptions()
 driver = webdriver.Edge(executable_path=edgedriver_path, options=edge_options)
 
 # List of target websites
-websites = [
-    'https://www.website1.com/search?manufacturer=',
-    'https://www.website2.com/search?manufacturer=',
-    'https://www.website3.com/search?manufacturer='
-]
+websites = [https://www.bing.com/shop?FORM=SHOPTB]
 
 # Read manufacturer codes from Excel file
-excel_file_path = 'manufacturer_codes.xlsx'  # Update with your Excel file path
-manufacturer_codes_df = pd.read_excel(excel_file_path)
+excel_file_path = 'C:\Users\ankur.chadha\Desktop\Automation\sku_test.xlsx'  # Update with your Excel file path
+sku_test_df = pd.read_excel(excel_file_path)
 
 # Get the current date and time
 current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
 # Iterate over the manufacturer codes
-for index, row in manufacturer_codes_df.iterrows():
+for index, row in sku_test_df.iterrows():
     manufacturer_code_1 = row['Manufacturer Code 1']
     manufacturer_code_2 = row['Manufacturer Code 2']
+    item_description = row['item description']
+
+#skip iteration if manufacturer codes are missing
+if pd.isnull(manufacturer_code_1) or pd.isnull(manufacturer_code_2):
+continue
+
+
+ # Construct the screenshot filename based on item description
+screenshot_filename_1 = f'screenshot_{item_description}_{i}_{current_datetime}.png'
+driver.save_screenshot(screenshot_filename_1)
 
     # Loop through the websites
     for i, website in enumerate(websites):
