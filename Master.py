@@ -50,6 +50,10 @@ for index, row in sku_test_df.iterrows():
         # Create a BeautifulSoup object
         soup_1 = BeautifulSoup(response_1.text, 'html.parser')
 
+        #wait for the desired element or condition to be met
+        wait = WebDriverWait(driver, 200)
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'body')))
+
         # Check if the web page contains the desired content
         if 'No results found' not in response_1.text:
             # Capture the screenshot using manufacturer code 1
@@ -65,6 +69,10 @@ for index, row in sku_test_df.iterrows():
 
             # Create a BeautifulSoup object
             soup_2 = BeautifulSoup(response_2.text, 'html.parser')
+
+            #wait for the desired element or condition to be met
+            wait = WebDriverWait(driver, 200)
+            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'body')))
 
             # Capture the screenshot using manufacturer code 2
             screenshot_filename_2 = f'screenshot_{model_number_2}_{i}_{current_datetime}.png'

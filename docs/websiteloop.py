@@ -1,5 +1,5 @@
  # Loop through the websites
-    for i, website in enumerate(websites):
+ for i, website in enumerate(websites):
         # Construct the URL using manufacturer code 1
         url_1 = website + str(model_number_1)
 
