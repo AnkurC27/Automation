@@ -9,18 +9,15 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 # Set the path to the EdgeDriver executable
-edgedriver_path = r'C:\Users\ankur.chadha\desktop\msedgedriver'  # Replace with the actual path to msedgedriver
+edgedriver_path = r'C:\Users\ankur.chadha\desktop\msedgedriver'  
 
-# Set up the Edge options
 edge_options = webdriver.EdgeOptions()
-# Add any desired options, e.g., to run headless:
-# edge_options.add_argument('--headless')
 
 # Initialize the Edge driver with the EdgeOptions object
 driver = webdriver.Edge(service=Service(edgedriver_path), options=edge_options)
 
-# List of target websites
-websites = ['https://www.bing.com/shop?FORM=SHOPTB']
+# Website URL template with a placeholder for the model number
+website_url_template = 'https://www.bing.com/shop?q={model_number}&qs=n&form=SHOPSB&sp=-1&lq=0&pq=spt67m8-01&sc=0-10&sk=&cvid=CEC4A7799DFA4DBF9867A9C06C81D147&ghsh=0&ghacc=0&ghpl='
 
 # Read manufacturer codes from Excel file
 excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\SKU test.xlsx'  # Update with your Excel file path
