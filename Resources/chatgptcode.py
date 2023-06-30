@@ -27,8 +27,8 @@ sku_test_df = pd.read_excel(excel_file_path)
 current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
  # Construct the screenshot filenames based on item description
-    screenshot_filename_1 = f'screenshot_{item_description}_1_{current_datetime}.png'
-    screenshot_filename_2 = f'screenshot_{item_description}_2_{current_datetime}.png'
+screenshot_filename_1 = f'screenshot_{item_description}_1_{current_datetime}.png'
+screenshot_filename_2 = f'screenshot_{item_description}_2_{current_datetime}.png'
     
 
 # Iterate over the manufacturer codes

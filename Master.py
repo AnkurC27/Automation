@@ -4,6 +4,9 @@ import datetime
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 
 # Set the path to the EdgeDriver executable
 edgedriver_path = r'C:\Users\ankur.chadha\desktop\msedgedriver'  # Replace with the actual path to msedgedriver
@@ -26,25 +29,20 @@ sku_test_df = pd.read_excel(excel_file_path)
 # Get the current date and time
 current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
- # Construct the screenshot filenames based on item description
-    screenshot_filename_1 = f'screenshot_{item_description}_1_{current_datetime}.png'
-    screenshot_filename_2 = f'screenshot_{item_description}_2_{current_datetime}.png'
-    
-
 # Iterate over the manufacturer codes
 for index, row in sku_test_df.iterrows():
-    model_number_1 = row['Manufacturer Code 1']
-    model_number_2 = row['Manufacturer Code 2']
-    item_description = row['item description']
+    model_number_1 = row['Model Number 1']
+    model_number_2 = row['Model Number 2']
+    item_description = row['Item Description']
 
     # Skip iteration if manufacturer codes are missing
-    if pd.isnull(model_number_1) or pd.isnull(model_number_2):
+    if pd.isnull(model_number_1) and pd.isnull(model_number_2):
         continue
 
     # Loop through the websites
     for i, website in enumerate(websites):
         # Construct the URL using manufacturer code 1
-        url_1 = website + model_number_1
+        url_1 = website + str(model_number_1)
 
         # Fetch the web page
         response_1 = requests.get(url_1)
@@ -60,7 +58,7 @@ for index, row in sku_test_df.iterrows():
             driver.save_screenshot(screenshot_filename_1)
         else:
             # Construct the URL using manufacturer code 2
-            url_2 = website + model_number_2
+            url_2 = website + str(model_number_2)
 
             # Fetch the web page
             response_2 = requests.get(url_2)
@@ -72,6 +70,10 @@ for index, row in sku_test_df.iterrows():
             screenshot_filename_2 = f'screenshot_{model_number_2}_{i}_{current_datetime}.png'
             driver.get("data:text/html;charset=utf-8," + str(soup_2))
             driver.save_screenshot(screenshot_filename_2)
+
+ # Construct the screenshot filenames based on item description
+screenshot_filename_1 = f'screenshot_{item_description}_1_{current_datetime}.png'
+screenshot_filename_2 = f'screenshot_{item_description}_2_{current_datetime}.png'
 
 # Close the web driver
 driver.quit()
