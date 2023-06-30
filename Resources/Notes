@@ -1,1 +1,5 @@
+screenshot.py is operational, it is capable of taking 2 screenshots of espn, nike, and knicks.com
 
+issues must be from url generation, so I will be double checking url
+
+Load times are not a concern
