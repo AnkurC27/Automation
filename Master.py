@@ -16,9 +16,6 @@ edge_options = webdriver.EdgeOptions()
 # Initialize the Edge driver with the EdgeOptions object
 driver = webdriver.Edge(service=Service(edgedriver_path), options=edge_options)
 
-# Website URL template with a placeholder for the model number
-website_url_template = 'https://www.bing.com/shop?q={model_number}&qs=n&form=SHOPSB&sp=-1&lq=0&pq=spt67m8-01&sc=0-10&sk=&cvid=CEC4A7799DFA4DBF9867A9C06C81D147&ghsh=0&ghacc=0&ghpl='
-
 # Read manufacturer codes from Excel file
 excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\SKU test.xlsx'  # Update with your Excel file path
 sku_test_df = pd.read_excel(excel_file_path)
@@ -26,23 +23,31 @@ sku_test_df = pd.read_excel(excel_file_path)
 # Get the current date and time
 current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
-# Iterate over the manufacturer codes
+# Website URL template with a placeholder for the model number
+website_url_template = 'https://www.bing.com/shop?q={model_number}&qs=n&form=SHOPSB&sp=-1&lq=0&pq=spt67m8-01&sc=0-10&sk=&cvid=CEC4A7799DFA4DBF9867A9C06C81D147&ghsh=0&ghacc=0&ghpl='
+
+# Iterate over the rows in the Excel file
 for index, row in sku_test_df.iterrows():
     model_number_1 = row['Model Number 1']
     model_number_2 = row['Model Number 2']
-    item_description = row['Item Description']
+    
+    # Skip iteration if both model numbers are missing
+    if pd.isnull(model_number_1) and pd.isnull(model_number_2):
+        continue
+    
+    # Generate the website URLs by replacing the placeholders with the model numbers
+    website_url_1 = website_url_template.replace('{model_number}', str(model_number_1))
+    website_website_url_2 = website_url_template.replace('{model_number}', str(model_number_2))
 
     # Skip iteration if manufacturer codes are missing
     if pd.isnull(model_number_1) and pd.isnull(model_number_2):
         continue
 
     # Loop through the websites
-    for i, website in enumerate(websites):
-        # Construct the URL using manufacturer code 1
-        url_1 = website + str(model_number_1)
+    for i, website_url_template in enumerate(websites):
 
         # Fetch the web page
-        response_1 = requests.get(url_1)
+        response_1 = requests.get(website_url_1)
 
         # Create a BeautifulSoup object
         soup_1 = BeautifulSoup(response_1.text, 'html.parser')
@@ -59,10 +64,10 @@ for index, row in sku_test_df.iterrows():
             driver.save_screenshot(screenshot_filename_1)
         else:
             # Construct the URL using manufacturer code 2
-            url_2 = website + str(model_number_2)
+            website_url_2 = website + str(model_number_2)
 
             # Fetch the web page
-            response_2 = requests.get(url_2)
+            response_2 = requests.get(website_url_2)
 
             # Create a BeautifulSoup object
             soup_2 = BeautifulSoup(response_2.text, 'html.parser')
