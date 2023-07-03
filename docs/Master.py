@@ -7,29 +7,41 @@ from selenium.webdriver.edge.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+import os
 
 # Set the path to the EdgeDriver executable
 edgedriver_path = r'C:\Users\ankur.chadha\desktop\msedgedriver'  
 
+#set up edge options
 edge_options = webdriver.EdgeOptions()
 
-# Initialize the Edge driver with the EdgeOptions object
-driver = webdriver.Edge(service=Service(edgedriver_path), options=edge_options)
+# Add the Edge driver directory to the PATH environment variable
+os.environ["PATH"] += os.pathsep + edgedriver_path
+
+# Initialize the Edge driver
+driver = webdriver.Edge(options=edge_options)
 
 # Read manufacturer codes from Excel file
-excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'  # Update with your Excel file path
+excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'  
 sku_test_df = pd.read_excel(excel_file_path)
-
-# Get the current date and time
-current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
 # Website URL template with a placeholder for the model number
 website_url_template = 'https://www.bing.com/shop?q={model_number}&FORM=SHOPTB'
 
+# Get the column index of the 'Model Number' header
+model_number_col_index = sku_test_df.columns.get_loc('Model Number 1')
+model_number_col_index_2 = sku_test_df.columns.get_loc('Model Number 2')
+
+# Get the column index of the 'Item Number' header
+item_number_col_index = sku_test_df.columns.get_loc('Item Number')
+
+# Get the column index of the 'Model Number' header
+item_description_col_index = sku_test_df.columns.get_loc('Item Description')
+
 # Iterate over the rows in the Excel file
 for index, row in sku_test_df.iterrows():
-    model_number_1 = row['Model Number 1']
-    model_number_2 = row['Model Number 2']
+    model_number_1 = row[model_number_col_index]
+    model_number_2 = row[model_number_col_index_2]
     
     # Skip iteration if both model numbers are missing
     if pd.isnull(model_number_1) and pd.isnull(model_number_2):
@@ -37,49 +49,27 @@ for index, row in sku_test_df.iterrows():
     
     # Generate the website URLs by replacing the placeholders with the model numbers
     website_url_1 = website_url_template.replace('{model_number}', str(model_number_1))
-    website_website_url_2 = website_url_template.replace('{model_number}', str(model_number_2))
 
-    # Loop through the websites
-for i, website_url_template in enumerate(website_url_template):
+    # Capture the screenshot using manufacturer code 1
+    screenshot_filename_1 = f'screenshot_{item_number_col_index}_{item_description_col_index}.png'
+    driver.get(website_url_1)
+    driver.save_screenshot(screenshot_filename_1)
 
-        # Fetch the web page
-        response_1 = requests.get(website_url_1)
+else: 
 
-        # Create a BeautifulSoup object
-        soup_1 = BeautifulSoup(response_1.text, 'html.parser')
+    # Construct the URL using manufacturer code 2
+    website_url_2 = website_url_template + str(model_number_2)
+    website_url_2 = website_url_template.replace('{model_number}', str(model_number_2))
+    
+    # Fetch the web page
+    response_2 = requests.get(website_url_2)
 
-        #wait for the desired element or condition to be met
-        wait = WebDriverWait(driver, 200)
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'body')))
+    # Create a BeautifulSoup object
+    soup_2 = BeautifulSoup(response_2.text, 'html.parser')
 
-        # Check if the web page contains the desired content
-        if 'No results found' not in response_1.text:
-            # Capture the screenshot using manufacturer code 1
-            screenshot_filename_1 = f'screenshot_{model_number_1}_{i}_{current_datetime}.png'
-            driver.get("data:text/html;charset=utf-8," + str(soup_1))
-            driver.save_screenshot(screenshot_filename_1)
-        else:
-            # Construct the URL using manufacturer code 2
-            website_url_2 = website_url_template + str(model_number_2)
+    # Capture the screenshot using manufacturer code 2
+    screenshot_filename_2 = f'screenshot_{model_number_1}.png'
+    driver.get(website_url_2)
+    driver.save_screenshot(screenshot_filename_2)
 
-            # Fetch the web page
-            response_2 = requests.get(website_url_2)
-
-            # Create a BeautifulSoup object
-            soup_2 = BeautifulSoup(response_2.text, 'html.parser')
-
-            #wait for the desired element or condition to be met
-            wait = WebDriverWait(driver, 200)
-            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'body')))
-
-            # Capture the screenshot using manufacturer code 2
-            screenshot_filename_2 = f'screenshot_{model_number_2}_{i}_{current_datetime}.png'
-            driver.get("data:text/html;charset=utf-8," + str(soup_2))
-            driver.save_screenshot(screenshot_filename_2)
-
- # Construct the screenshot filenames based on item description
-screenshot_filename_1 = f'screenshot_{item_description}_1_{current_datetime}.png'
-screenshot_filename_2 = f'screenshot_{item_description}_2_{current_datetime}.png'
-
-# Close the web driver
 driver.quit()
