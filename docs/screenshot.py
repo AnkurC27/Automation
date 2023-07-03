@@ -14,8 +14,6 @@ edgedriver_dir = r'C:\Users\ankur.chadha\desktop\msedgedriver'  # Replace with t
 
 # Set up the Edge options
 edge_options = webdriver.EdgeOptions()
-# Add any desired options, e.g., to run headless:
-# edge_options.add_argument('--headless')
 
 # Add the Edge driver directory to the PATH environment variable
 os.environ["PATH"] += os.pathsep + edgedriver_dir
@@ -28,7 +26,7 @@ websites = ['https://www.espn.com', 'https://www.nike.com', 'https://www.knicks.
 
 # Open each website and take 2 screenshots
 for website in websites:
-    # Open the website
+    
     driver.get(website)
 
     # Take 2 screenshots

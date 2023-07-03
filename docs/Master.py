@@ -17,7 +17,7 @@ edge_options = webdriver.EdgeOptions()
 driver = webdriver.Edge(service=Service(edgedriver_path), options=edge_options)
 
 # Read manufacturer codes from Excel file
-excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\SKU test.xlsx'  # Update with your Excel file path
+excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'  # Update with your Excel file path
 sku_test_df = pd.read_excel(excel_file_path)
 
 # Get the current date and time
@@ -39,12 +39,8 @@ for index, row in sku_test_df.iterrows():
     website_url_1 = website_url_template.replace('{model_number}', str(model_number_1))
     website_website_url_2 = website_url_template.replace('{model_number}', str(model_number_2))
 
-    # Skip iteration if manufacturer codes are missing
-    if pd.isnull(model_number_1) and pd.isnull(model_number_2):
-        continue
-
     # Loop through the websites
-    for i, website_url_template in enumerate(websites):
+for i, website_url_template in enumerate(website_url_template):
 
         # Fetch the web page
         response_1 = requests.get(website_url_1)
@@ -64,7 +60,7 @@ for index, row in sku_test_df.iterrows():
             driver.save_screenshot(screenshot_filename_1)
         else:
             # Construct the URL using manufacturer code 2
-            website_url_2 = website + str(model_number_2)
+            website_url_2 = website_url_template + str(model_number_2)
 
             # Fetch the web page
             response_2 = requests.get(website_url_2)
