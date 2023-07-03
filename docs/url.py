@@ -31,7 +31,7 @@ website_url_template = 'https://www.bing.com/shop?q={model_number}&FORM=SHOPTB'
 'https://www.bing.com/shop?q={model_number}&FORM=SHOPTB'
 
 # Get the column index of the 'Model Number' header
-model_number_col_index = sku_test_df.columns.get_loc('Model Number')
+model_number_col_index = sku_test_df.columns.get_loc('Model Number 1')
 
 # Iterate over the model numbers
 for index, row in sku_test_df.iterrows():

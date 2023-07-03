@@ -24,7 +24,7 @@ sku_test_df = pd.read_excel(excel_file_path)
 current_datetime = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
 # Website URL template with a placeholder for the model number
-website_url_template = 'https://www.bing.com/shop?q={model_number}&qs=n&form=SHOPSB&sp=-1&lq=0&pq=spt67m8-01&sc=0-10&sk=&cvid=CEC4A7799DFA4DBF9867A9C06C81D147&ghsh=0&ghacc=0&ghpl='
+website_url_template = 'https://www.bing.com/shop?q={model_number}&FORM=SHOPTB'
 
 # Iterate over the rows in the Excel file
 for index, row in sku_test_df.iterrows():
