@@ -21,6 +21,9 @@ os.environ["PATH"] += os.pathsep + edgedriver_path
 # Initialize the Edge driver
 driver = webdriver.Edge(options=edge_options)
 
+# Maximize the browser window
+driver.maximize_window()
+
 # Read manufacturer codes from Excel file
 excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'  
 sku_test_df = pd.read_excel(excel_file_path)
@@ -42,6 +45,8 @@ item_description_col_index = sku_test_df.columns.get_loc('Item Description')
 for index, row in sku_test_df.iterrows():
     model_number_1 = row[model_number_col_index]
     model_number_2 = row[model_number_col_index_2]
+
+    print(f'Processing row{index}: model_number_1={model_number_1}, model_number_2={model_number_2}')
     
     # Skip iteration if both model numbers are missing
     if pd.isnull(model_number_1) and pd.isnull(model_number_2):
