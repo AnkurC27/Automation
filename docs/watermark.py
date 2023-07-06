@@ -27,7 +27,7 @@ excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'
 sku_test_df = pd.read_excel(excel_file_path)
 
 # Website URL template with a placeholder for the model number
-website_url_template = 'https://www.bing.com/shop?q={model_number}&FORM=SHOPTB'
+website_url_template = 'https://www.bing.com/shop?q={model_number}+-site:ebay.com+-site:amazon.com&FORM=SHOPTB'
 
 def add_watermark(screenshot_filename):
     # Add watermark to screenshot
@@ -37,7 +37,7 @@ def add_watermark(screenshot_filename):
     position = (10, 10)
     font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 30)
     color = "black" 
-    
+
     # Get image and text dimensions
     img_width, img_height = img.size
     text_width, text_height = draw.textsize(text, font=font)
