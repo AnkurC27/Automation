@@ -8,6 +8,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import os
+from PIL import Image, ImageDraw, ImageFont
+
 
 # Set the path to the EdgeDriver executable
 edgedriver_path = r'C:\Users\ankur.chadha\desktop\msedgedriver'  
@@ -62,6 +64,15 @@ for index, row in sku_test_df.iterrows():
         screenshot_filename_1 = f'screenshot_{row[item_number_col_index]}_{row[item_description_col_index]}.png'
         driver.save_screenshot(screenshot_filename_1)
 
+        # Add Watermark to screenshot
+        img = Image.open(screenshot_filename_1)
+        draw = ImageDraw.Draw(img)
+        text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        position = (10, 10)
+        font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 15)
+        draw.text(position, text, font=font)
+        img.save(screenshot_filename_1)
+
     # Check if model number 2 is not null before taking screenshot
     if pd.notnull(model_number_2):
         # Construct the URL using manufacturer code 2
@@ -77,6 +88,15 @@ for index, row in sku_test_df.iterrows():
         driver.get(website_url_2)
         screenshot_filename_2 = f'screenshot_{model_number_2}.png'
         driver.save_screenshot(screenshot_filename_2)
+
+         # Add Watermark to screenshot
+        img = Image.open(screenshot_filename_2)
+        draw = ImageDraw.Draw(img)
+        text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        position = (10, 10)
+        font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 15)
+        draw.text(position, text, font=font)
+        img.save(screenshot_filename_2)
 
 driver.quit()
 
