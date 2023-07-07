@@ -33,6 +33,14 @@ sku_test_df = pd.read_excel(excel_file_path)
 # Website URL template with a placeholder for the model number
 website_url_template = 'https://www.bing.com/shop?q={model_number}&FORM=SHOPTB'
 
+# Get the column index of the 'Model Number' header
+model_number_col_index = sku_test_df.columns.get_loc('Model Number 1')
+model_number_col_index_2 = sku_test_df.columns.get_loc('Model Number 2')
+
+# Get the column index of the 'Item Number' header
+item_number_col_index = sku_test_df.columns.get_loc('Item Number')
+
+
 def add_watermark(screenshot_filename):
     # Add watermark to screenshot
     img = Image.open(screenshot_filename)
@@ -55,8 +63,17 @@ def add_watermark(screenshot_filename):
 
 # Iterate over the rows in the Excel file
 for index, row in sku_test_df.iterrows():
-    model_number_1 = row['Model Number 1']
-    model_number_2 = row['Model Number 2']
+    model_number_1 = row[model_number_col_index]
+    model_number_2 = row[model_number_col_index_2]
+    item_number = row[item_number_col_index]
+    folder_name = str(int(item_number/100)*100)
+
+    if not os.path.exists(folder_name):
+        try:
+            os.mkdir(folder_name)
+            print(f"Directory '{folder_name}' created.")
+        except Exception as e:
+            print(f"Could not create the directory. Error{str(e)}")
 
     # Generate the website URLs by replacing the placeholders with the model numbers
     website_url_1 = website_url_template.replace('{model_number}', str(model_number_1))
@@ -66,14 +83,14 @@ for index, row in sku_test_df.iterrows():
     if pd.notnull(model_number_1):
         # Capture the screenshot using manufacturer code 1
         driver.get(website_url_1)
-        screenshot_filename = f'screenshot_{row["Item Number"]}_{row["Item Description"]}.png'
+        screenshot_filename = f'{folder_name}/screenshot_{row["Item Number"]}_{row["Item Description"]}.png'
         if driver.save_screenshot(screenshot_filename):
             add_watermark(screenshot_filename)
     # Check if model number 2 is not null before taking screenshot
     elif pd.notnull(model_number_2):
         # Capture the screenshot using manufacturer code 2
         driver.get(website_url_2)
-        screenshot_filename = f'screenshot_{row["Item Number"]}_{row["Item Description"]}.png'
+        screenshot_filename = f'{folder_name}/screenshot_{row["Item Number"]}_{row["Item Description"]}.png'
         if driver.save_screenshot(screenshot_filename):
             add_watermark(screenshot_filename)
 
