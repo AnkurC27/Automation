@@ -2,11 +2,22 @@ Home Depot url: https://www.homedepot.com/s/{model_number}?NCNI-5
 White Cap url: https://www.whitecap.com/search/?query={model_number}
 Ace Hardware url: https://www.acehardware.com/search?query={model_number}
 Ace Tool url: https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=
-Tool Nut url: https://www.toolnut.com/shop.html?q={DCS380B}
+Tool Nut url: https://www.toolnut.com/shop.html?q={model_number}
 
 
 HTML identifiers for each website:
 
 Home Depot: price: <div class= "price">
-            image: <div class= "product-image__wrapper--dmvgq">
-            image: 
+            image: <div class= "product-image__wrapper--dmvgq"> for multiple results
+            image: <div class= "product--sticky col__12-12 col__7-12 --sm" for individual results 
+            no results: </span> class="no-results-found-banner__term--9f8g5"></span>
+
+White Cap: price: <div class="product-view__price"></div>
+           image: <div class="product-view__gallary"></div> for individual result
+           image: <div class="product-list__wrapper"></div> for multiple results
+           no results: if none of those objects appear, the search failed
+
+Ace Hardware: price: <span class="custom-price mz-price"></span>
+              image:
+              image:
+              no results: <div id="mz-drop-zone-no-results-help"
