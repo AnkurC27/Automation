@@ -1,1 +1,5 @@
-'https://www.bing.com/shop?q={model_number}&qs=n&form=SHOPSB&sp=-1&lq=0&pq=spt67m8-01&sc=0-10&sk=&cvid=CEC4A7799DFA4DBF9867A9C06C81D147&ghsh=0&ghacc=0&ghpl='
+Home Depot url: https://www.homedepot.com/s/{model_number}?NCNI-5
+White Cap url: https://www.whitecap.com/search/?query={model_number}
+Ace Hardware url: https://www.acehardware.com/search?query={model_number}
+Ace Tool url: https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=
+Tool Nut url: https://www.toolnut.com/shop.html?q={DCS380B}
