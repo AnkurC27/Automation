@@ -14,15 +14,25 @@ edgedriver_dir = r'C:\Users\ankur.chadha\desktop\msedgedriver'  # Replace with t
 
 # Set up the Edge options
 edge_options = webdriver.EdgeOptions()
-
-# Add the Edge driver directory to the PATH environment variable
 os.environ["PATH"] += os.pathsep + edgedriver_dir
-
-# Initialize the Edge driver
 driver = webdriver.Edge(options=edge_options)
+driver.maximize_window()
+
+excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'  
+sku_test_df = pd.read_excel(excel_file_path)
 
 # List of websites
-websites = ['https://www.espn.com', 'https://www.nike.com', 'https://www.knicks.com']
+websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5', 
+            'https://www.whitecap.com/search/?query={model_number}', 
+            'https://www.acehardware.com/search?query={model_number}', 
+            'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=', 
+            'https://www.toolnut.com/shop.html?q={model_number}']
+
+model_number_col_index = sku_test_df.columns.get_loc('Model Number 1')
+model_number_col_index_2 = sku_test_df.columns.get_loc('Model Number 2')
+
+# Get the column index of the 'Item Number' header
+item_number_col_index = sku_test_df.columns.get_loc('Item Number')
 
 # Open each website and take 2 screenshots
 for website in websites:

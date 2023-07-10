@@ -3,3 +3,10 @@ White Cap url: https://www.whitecap.com/search/?query={model_number}
 Ace Hardware url: https://www.acehardware.com/search?query={model_number}
 Ace Tool url: https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=
 Tool Nut url: https://www.toolnut.com/shop.html?q={DCS380B}
+
+
+HTML identifiers for each website:
+
+Home Depot: price: <div class= "price">
+            image: <div class= "product-image__wrapper--dmvgq">
+            image: 
