@@ -39,13 +39,14 @@ sku_test_df = pd.read_excel(excel_file_path)
 websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5',
             'https://www.whitecap.com/search/?query={model_number}',
             'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=',
+            'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true',
             'https://www.toolnut.com/shop.html?q={model_number}']
 
 # Website Names
 website_names = {
     'www.homedepot.com': 'home_depot',
     'www.whitecap.com': 'whitecap',
-    'www.acehardware.com': 'acehardware',
+    'www.grainger.com': 'grainger',
     'www.acetool.com': 'acetool',
     'www.toolnut.com': 'toolnut'
 }
@@ -102,7 +103,7 @@ for index, row in sku_test_df.iterrows():
         website_wait_times = {
         'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
         'https://www.whitecap.com/search/?query={model_number}': 10,
-        'https://www.acehardware.com/search?query={model_number}': 0,
+        'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 0,
         'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=': 0,
         'https://www.toolnut.com/shop.html?q={model_number}': 0
 }
