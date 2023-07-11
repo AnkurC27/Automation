@@ -37,7 +37,7 @@ sku_test_df = pd.read_excel(excel_file_path)
 
 # List of websites
 websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5',
-            'https://www.whitecap.com/search/?query={model_number}',
+            'https://www.motion.com/products/search;q={model_number};origin=search',
             'https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product',
             'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true',
             'https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*']
@@ -45,7 +45,7 @@ websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5',
 # Website Names
 website_names = {
     'www.homedepot.com': 'home_depot',
-    'www.whitecap.com': 'whitecap',
+    'www.motion.com': 'motion_i',
     'www.grainger.com': 'grainger',
     'www.usatoolsinc.com': 'usa_tools',
     'www.coastaltool.com': 'coastal'
@@ -102,7 +102,7 @@ for index, row in sku_test_df.iterrows():
 
         website_wait_times = {
         'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
-        'https://www.whitecap.com/search/?query={model_number}': 10,
+        'https://www.motion.com/products/search;q={model_number};origin=search': 3,
         'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 3,
         'https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product': 3,
         'https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*': 3
