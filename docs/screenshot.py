@@ -7,10 +7,10 @@ from selenium.webdriver.edge.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoAlertPresentException
 import os
 from PIL import Image, ImageDraw, ImageFont
 import time
-import re
 
 # Set the path to the EdgeDriver executable
 edgedriver_path = r'C:\Users\ankur.chadha\desktop\msedgedriver'
@@ -24,6 +24,10 @@ os.environ["PATH"] += os.pathsep + edgedriver_path
 # Initialize the Edge driver
 driver = webdriver.Edge(options=edge_options)
 
+# Wait for the page to load
+wait = WebDriverWait(driver, 10)
+wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
+
 # Maximize the browser window
 driver.maximize_window()
 
@@ -34,9 +38,17 @@ sku_test_df = pd.read_excel(excel_file_path)
 # List of websites
 websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5',
             'https://www.whitecap.com/search/?query={model_number}',
-            'https://www.acehardware.com/search?query={model_number}',
             'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=',
             'https://www.toolnut.com/shop.html?q={model_number}']
+
+# Website Names
+website_names = {
+    'www.homedepot.com': 'home_depot',
+    'www.whitecap.com': 'whitecap',
+    'www.acehardware.com': 'acehardware',
+    'www.acetool.com': 'acetool',
+    'www.toolnut.com': 'toolnut'
+}
 
 # Get the column index of the 'Model Number' header
 model_number_col_index = sku_test_df.columns.get_loc('Model Number 1')
@@ -68,7 +80,11 @@ def add_watermark(screenshot_filename):
 for index, row in sku_test_df.iterrows():
     model_number_1 = row[model_number_col_index]
     model_number_2 = row[model_number_col_index_2]
+
     item_number = row[item_number_col_index]
+    if pd.isnull(item_number):
+        break
+
     folder_name = str(int(item_number/100)*100)
 
     if not os.path.exists(folder_name):
@@ -80,21 +96,31 @@ for index, row in sku_test_df.iterrows():
 
     for model_number in [model_number_1, model_number_2]:
         # Check if model number is not null before opening websites and taking screenshots
-        if pd.isnull(model_number):
+        if not model_number or model_number.isspace():
             continue
 
         for website in websites:
-            # Generate the website URL by replacing the placeholder with the model number
             website_url = website.format(model_number=model_number)
             driver.get(website_url)
-            time.sleep(5)  # Wait for 5 seconds
+            time.sleep(2)
+
+            try:
+                driver.switch_to.alert.accept()
+            except NoAlertPresentException:
+                pass
 
             item_desc = str(row[item_desc_col_index])
+            website_name = website.split("//")[-1].split("/")[0]
+
+            custom_website_name = website_names.get(website_name, website_name)
+
+            item_desc = str(row[item_desc_col_index]).replace('\'', '_').replace('\"', '_')
 
             # Take a screenshot
-            screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}.png'
+            screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}_{custom_website_name}_{index}.png'
             driver.save_screenshot(screenshot_filename)
-            add_watermark(screenshot_filename)  # Add watermark to the screenshot
+            add_watermark(screenshot_filename)
+            driver.delete_all_cookies()  
 
 # Close the web driver
 driver.quit()
