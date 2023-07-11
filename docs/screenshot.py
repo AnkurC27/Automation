@@ -8,42 +8,94 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import os
+from PIL import Image, ImageDraw, ImageFont
+import time
+import re
 
-# Set the path to the directory containing the EdgeDriver executable
-edgedriver_dir = r'C:\Users\ankur.chadha\desktop\msedgedriver'  # Replace with the directory containing msedgedriver
+# Set the path to the EdgeDriver executable
+edgedriver_path = r'C:\Users\ankur.chadha\desktop\msedgedriver'
 
-# Set up the Edge options
+# Set up Edge options
 edge_options = webdriver.EdgeOptions()
-os.environ["PATH"] += os.pathsep + edgedriver_dir
+
+# Add the Edge driver directory to the PATH environment variable
+os.environ["PATH"] += os.pathsep + edgedriver_path
+
+# Initialize the Edge driver
 driver = webdriver.Edge(options=edge_options)
+
+# Maximize the browser window
 driver.maximize_window()
 
-excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'  
+# Read manufacturer codes from Excel file
+excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\skutest.xlsx'
 sku_test_df = pd.read_excel(excel_file_path)
 
 # List of websites
-websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5', 
-            'https://www.whitecap.com/search/?query={model_number}', 
-            'https://www.acehardware.com/search?query={model_number}', 
-            'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=', 
+websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5',
+            'https://www.whitecap.com/search/?query={model_number}',
+            'https://www.acehardware.com/search?query={model_number}',
+            'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=',
             'https://www.toolnut.com/shop.html?q={model_number}']
 
+# Get the column index of the 'Model Number' header
 model_number_col_index = sku_test_df.columns.get_loc('Model Number 1')
 model_number_col_index_2 = sku_test_df.columns.get_loc('Model Number 2')
 
 # Get the column index of the 'Item Number' header
 item_number_col_index = sku_test_df.columns.get_loc('Item Number')
+item_desc_col_index = sku_test_df.columns.get_loc('Item Description')
 
-# Open each website and take 2 screenshots
-for website in websites:
-    
-    driver.get(website)
+def add_watermark(screenshot_filename):
+    img = Image.open(screenshot_filename)
+    draw = ImageDraw.Draw(img)
+    text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    position = (10, 10)
+    font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 30)
+    color = "black" 
 
-    # Take 2 screenshots
-    for i in range(2):
-        # Take a screenshot
-        screenshot_filename = f'{website.replace("https://www.", "")}_screenshot_{i+1}.png'
-        driver.save_screenshot(screenshot_filename)
+    # Get image and text dimensions
+    img_width, img_height = img.size
+    text_width, text_height = draw.textsize(text, font=font)
+
+    position = ((img_width - text_width) // 2, 10)
+
+    draw.text(position, text, font=font, fill=color)
+    img.save(screenshot_filename)
+
+
+# Iterate over the rows in the Excel file
+for index, row in sku_test_df.iterrows():
+    model_number_1 = row[model_number_col_index]
+    model_number_2 = row[model_number_col_index_2]
+    item_number = row[item_number_col_index]
+    folder_name = str(int(item_number/100)*100)
+
+    if not os.path.exists(folder_name):
+        try:
+            os.mkdir(folder_name)
+            print(f"Directory '{folder_name}' created.")
+        except Exception as e:
+            print(f"Could not create the directory. Error{str(e)}")
+
+    for model_number in [model_number_1, model_number_2]:
+        # Check if model number is not null before opening websites and taking screenshots
+        if pd.isnull(model_number):
+            continue
+
+        for website in websites:
+            # Generate the website URL by replacing the placeholder with the model number
+            website_url = website.format(model_number=model_number)
+            driver.get(website_url)
+            time.sleep(5)  # Wait for 5 seconds
+
+            item_desc = str(row[item_desc_col_index])
+
+            # Take a screenshot
+            screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}.png'
+            driver.save_screenshot(screenshot_filename)
+            add_watermark(screenshot_filename)  # Add watermark to the screenshot
 
 # Close the web driver
 driver.quit()
+
