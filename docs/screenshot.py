@@ -99,10 +99,20 @@ for index, row in sku_test_df.iterrows():
         if not model_number or model_number.isspace():
             continue
 
+        website_wait_times = {
+        'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
+        'https://www.whitecap.com/search/?query={model_number}': 10,
+        'https://www.acehardware.com/search?query={model_number}': 0,
+        'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=': 0,
+        'https://www.toolnut.com/shop.html?q={model_number}': 0
+}
+
         for website in websites:
             website_url = website.format(model_number=model_number)
             driver.get(website_url)
-            time.sleep(2)
+            
+            wait_time = website_wait_times.get(website, 2)
+            time.sleep(wait_time)
 
             try:
                 driver.switch_to.alert.accept()
