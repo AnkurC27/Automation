@@ -3,7 +3,7 @@ White Cap url: https://www.whitecap.com/search/?query={model_number}
 Ace Hardware url: https://www.acehardware.com/search?query={model_number}
 Ace Tool url: https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=
 Tool Nut url: https://www.toolnut.com/shop.html?q={model_number}
-
+USA Tools url :https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product
 
 HTML identifiers for each website:
 

@@ -38,17 +38,17 @@ sku_test_df = pd.read_excel(excel_file_path)
 # List of websites
 websites = ['https://www.homedepot.com/s/{model_number}?NCNI-5',
             'https://www.whitecap.com/search/?query={model_number}',
-            'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=',
+            'https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product',
             'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true',
-            'https://www.toolnut.com/shop.html?q={model_number}']
+            'https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*']
 
 # Website Names
 website_names = {
     'www.homedepot.com': 'home_depot',
     'www.whitecap.com': 'whitecap',
     'www.grainger.com': 'grainger',
-    'www.acetool.com': 'acetool',
-    'www.toolnut.com': 'toolnut'
+    'www.usatoolsinc.com': 'usa_tools',
+    'www.coastaltool.com': 'coastal'
 }
 
 # Get the column index of the 'Model Number' header
@@ -103,9 +103,9 @@ for index, row in sku_test_df.iterrows():
         website_wait_times = {
         'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
         'https://www.whitecap.com/search/?query={model_number}': 10,
-        'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 0,
-        'https://www.acetool.com/searchresults.asp?Search={model_number}&Submit=': 0,
-        'https://www.toolnut.com/shop.html?q={model_number}': 0
+        'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 3,
+        'https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product': 3,
+        'https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*': 3
 }
 
         for website in websites:
