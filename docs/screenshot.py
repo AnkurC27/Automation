@@ -24,10 +24,6 @@ os.environ["PATH"] += os.pathsep + edgedriver_path
 # Initialize the Edge driver
 driver = webdriver.Edge(options=edge_options)
 
-# Wait for the page to load
-wait = WebDriverWait(driver, 10)
-wait.until(EC.visibility_of_element_located((By.TAG_NAME, 'body')))
-
 # Maximize the browser window
 driver.maximize_window()
 
