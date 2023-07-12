@@ -72,6 +72,13 @@ def add_watermark(screenshot_filename):
     draw.text(position, text, font=font, fill=color)
     img.save(screenshot_filename)
 
+website_columns = {
+    'www.homedepot.com': 'Home_Depot_Link',
+    'www.motion.com': 'Motion_i_Link',
+    'www.grainger.com': 'Grainger_Link',
+    'usatoolsinc.com': 'USA_Tools_Link',
+    'www.coastaltool.com': 'Coastal_Link'
+}
 
 # Iterate over the rows in the Excel file
 for index, row in sku_test_df.iterrows():
@@ -89,7 +96,7 @@ for index, row in sku_test_df.iterrows():
             os.mkdir(folder_name)
             print(f"Directory '{folder_name}' created.")
         except Exception as e:
-            print(f"Could not create the directory. Error{str(e)}")
+            print(f"Could not create the directory. Error: {str(e)}")
 
     for model_number in [model_number_1, model_number_2]:
         # Check if model number is not null before opening websites and taking screenshots
@@ -97,12 +104,12 @@ for index, row in sku_test_df.iterrows():
             continue
 
         website_wait_times = {
-        'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
-        'https://www.motion.com/products/search;q={model_number};origin=search': 3,
-        'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 3,
-        'https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product': 3,
-        'https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*': 3
-}
+            'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
+            'https://www.motion.com/products/search;q={model_number};origin=search': 3,
+            'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 3,
+            'https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product': 3,
+            'https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*': 3
+        }
 
         for website in websites:
             website_url = website.format(model_number=model_number)
@@ -127,8 +134,33 @@ for index, row in sku_test_df.iterrows():
             screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}_{custom_website_name}_{index}.png'
             driver.save_screenshot(screenshot_filename)
             add_watermark(screenshot_filename)
-            driver.delete_all_cookies()  
+            driver.delete_all_cookies()
+
+            screenshot_column_name = website_columns[website_name]
+            sku_test_df.at[index, screenshot_column_name] = website_url
+
+
+from openpyxl import load_workbook
+
+# Load existing workbook
+book = load_workbook(excel_file_path)
+
+# Select the sheet
+writer = book['Sheet1']
+
+# Write to the excel file
+for column in sku_test_df.columns:
+    col_index = sku_test_df.columns.get_loc(column)
+    for idx, value in sku_test_df[column].items():
+        writer.cell(row=idx+2, column=col_index+1, value=value)  # indices are 1-based in openpyxl
+
+# Save the workbook
+book.save(excel_file_path)
+
+# Close the workbook
+book.close()
 
 # Close the web driver
 driver.quit()
+
 
