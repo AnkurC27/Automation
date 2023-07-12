@@ -67,7 +67,7 @@ def add_watermark(screenshot_filename):
     img_width, img_height = img.size
     text_width, text_height = draw.textsize(text, font=font)
 
-    position = ((img_width - text_width) // 2, 10)
+    position = (img_width - text_width - 10, img_height - text_height - 10)
 
     draw.text(position, text, font=font, fill=color)
     img.save(screenshot_filename)

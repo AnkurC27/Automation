@@ -12,12 +12,3 @@ Home Depot: price: <div class= "price">
             image: <div class= "product--sticky col__12-12 col__7-12 --sm" for individual results 
             no results: </span> class="no-results-found-banner__term--9f8g5"></span>
 
-White Cap: price: <div class="product-view__price"></div>
-           image: <div class="product-view__gallary"></div> for individual result
-           image: <div class="product-list__wrapper"></div> for multiple results
-           no results: if none of those objects appear, the search failed
-
-Ace Hardware: price: <span class="custom-price mz-price"></span>
-              image:
-              image:
-              no results: <div id="mz-drop-zone-no-results-help"
