@@ -55,22 +55,7 @@ model_number_col_index_2 = sku_test_df.columns.get_loc('Model Number 2')
 item_number_col_index = sku_test_df.columns.get_loc('Item Number')
 item_desc_col_index = sku_test_df.columns.get_loc('Item Description')
 
-def add_watermark(screenshot_filename):
-    img = Image.open(screenshot_filename)
-    draw = ImageDraw.Draw(img)
-    text = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    position = (10, 10)
-    font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 30)
-    color = "black" 
 
-    # Get image and text dimensions
-    img_width, img_height = img.size
-    text_width, text_height = draw.textsize(text, font=font)
-
-    position = (img_width - text_width - 10, img_height - text_height -10)
-
-    draw.text(position, text, font=font, fill=color)
-    img.save(screenshot_filename)
 
 website_columns = {
     'www.homedepot.com': 'Home_Depot_Link',
@@ -80,12 +65,32 @@ website_columns = {
     'www.coastaltool.com': 'Coastal_Link'
 }
 
+def add_watermark(screenshot_filename, item_number, item_desc):
+    img = Image.open(screenshot_filename)
+    draw = ImageDraw.Draw(img)
+    date_time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    watermark_text = f"{item_number}, {item_desc}, {date_time}"
+    position = (10, 10)
+    font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 30)
+    color = "black" 
+
+    # Get image and text dimensions
+    img_width, img_height = img.size
+    text_width, text_height = draw.textsize(watermark_text, font=font)
+
+    position = (img_width - text_width - 10, img_height - text_height -10)
+
+    draw.text(position, watermark_text, font=font, fill=color)
+    img.save(screenshot_filename)
+
+
 # Iterate over the rows in the Excel file
 for index, row in sku_test_df.iterrows():
     model_number_1 = row[model_number_col_index]
     model_number_2 = row[model_number_col_index_2]
 
     item_number = row[item_number_col_index]
+    item_desc = str(row[item_desc_col_index])
     if pd.isnull(item_number):
         break
 
@@ -133,11 +138,11 @@ for index, row in sku_test_df.iterrows():
             # Take a screenshot
             screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}_{custom_website_name}_{index}.png'
             driver.save_screenshot(screenshot_filename)
-            add_watermark(screenshot_filename)
+            add_watermark(screenshot_filename, item_number, item_desc)
             driver.delete_all_cookies()
 
-            screenshot_column_name = website_columns[website_name]
-            sku_test_df.at[index, screenshot_column_name] = website_url
+screenshot_column_name = website_columns[website_name]
+sku_test_df.at[index, screenshot_column_name] = website_url
 
 
 from openpyxl import load_workbook
