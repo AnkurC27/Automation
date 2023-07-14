@@ -63,6 +63,7 @@ website_columns = {
     'www.coastaltool.com': 'Coastal_Link'
 }
 
+#watermark that adds a white border and a yellow highlight 
 def add_watermark(screenshot_filename, item_number, item_desc):
     img = Image.open(screenshot_filename)
     draw = ImageDraw.Draw(img)

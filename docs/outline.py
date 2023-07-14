@@ -63,6 +63,7 @@ website_columns = {
     'www.coastaltool.com': 'Coastal_Link'
 }
 
+#Watermark that adds a white outline around the black font
 def add_watermark(screenshot_filename, item_number, item_desc):
     img = Image.open(screenshot_filename)
     draw = ImageDraw.Draw(img)
