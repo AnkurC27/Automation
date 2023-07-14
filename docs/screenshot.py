@@ -55,8 +55,6 @@ model_number_col_index_2 = sku_test_df.columns.get_loc('Model Number 2')
 item_number_col_index = sku_test_df.columns.get_loc('Item Number')
 item_desc_col_index = sku_test_df.columns.get_loc('Item Description')
 
-
-
 website_columns = {
     'www.homedepot.com': 'Home_Depot_Link',
     'www.motion.com': 'Motion_i_Link',
@@ -73,14 +71,20 @@ def add_watermark(screenshot_filename, item_number, item_desc):
     position = (10, 10)
     font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 30)
     color = "black" 
+    stroke_color = "white"
+    stroke_width = 2
+    background_color = "yellow"
 
     # Get image and text dimensions
     img_width, img_height = img.size
     text_width, text_height = draw.textsize(watermark_text, font=font)
 
     position = (img_width - text_width - 10, img_height - text_height -10)
+    padding = 10
 
-    draw.text(position, watermark_text, font=font, fill=color)
+    draw.rectangle([position[0]-padding, position[1]-padding, position[0]+text_width+padding, position[1]+text_height+padding], fill=background_color)
+
+    draw.text(position, watermark_text, font=font, fill=color, stroke_width=stroke_width, stroke_fill=stroke_color)
     img.save(screenshot_filename)
 
 
