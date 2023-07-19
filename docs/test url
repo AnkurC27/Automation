@@ -1,10 +1,16 @@
 Home Depot url: https://www.homedepot.com/s/{model_number}?NCNI-5
-USA Tools url :https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product
+USA Tools url: https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product
+Grainger url: https://www.grainger.com/search?searchQuery={model_number}&searchBar=true
+Coastal: https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*
+Motion: https://www.motion.com/products/search;q={model_number};origin=search
 
 HTML identifiers for each website:
 
-Home Depot: price: <div class= "price">
-            image: <div class= "product-image__wrapper--dmvgq"> for multiple results
-            image: <div class= "product--sticky col__12-12 col__7-12 --sm" for individual results 
-            no results: </span> class="no-results-found-banner__term--9f8g5"></span>
+Home Depot: <div class= "price">
+Motion Tools: <div _ngcontent-micomui-c138="" class="price me-4p price-style ng-star-inserted">$606.03</div>
+USA Tools: <span data-product-price-without-tax="" class="price price--withoutTax">$565.11</span>
+Grainger: <span class="rbqU0E lVwVq5" data-testid="pricing-component-410D10">$307.03</span>
+Coastal: <div class="price--main" data-price="">
+
+
 

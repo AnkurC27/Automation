@@ -4,7 +4,7 @@ import datetime
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
+from urllib.parse import urlparse 
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoAlertPresentException
@@ -56,40 +56,53 @@ item_number_col_index = sku_test_df.columns.get_loc('Item Number')
 item_desc_col_index = sku_test_df.columns.get_loc('Item Description')
 
 website_columns = {
-    'www.homedepot.com': 'Home_Depot_Link',
-    'www.motion.com': 'Motion_i_Link',
-    'www.grainger.com': 'Grainger_Link',
+    'homedepot.com': 'Home_Depot_Link',
+    'motion.com': 'Motion_i_Link',
+    'grainger.com': 'Grainger_Link',
     'usatoolsinc.com': 'USA_Tools_Link',
-    'www.coastaltool.com': 'Coastal_Link'
+    'coastaltool.com': 'Coastal_Link'
 }
 
 price_columns = {
     'homedepot.com': 'Home_Depot_Price',
-    'www.motion.com': 'Motion_i_Price',
+    'motion.com': 'Motion_Price',
     'grainger.com': 'Grainger_Price',
     'usatoolsinc.com': 'USA_Tools_Price',
     'coastaltool.com': 'Coastal_Price'
 }
 #find the price elements on each website
 def get_price_from_html(html_content, website_name):
-    soup = BeautifulSoup(html_content, 'html.parser')
+
+    try:
+        soup = BeautifulSoup(html_content, 'html.parser')
+    except Exception as e:
+        print(f"Error parsing HTML: {str(e)}")
+        return None
 
     #Find the price based on website
-    if website_name == 'www.homedepot.com':
-        price_tag = soup.find('div', class_='price')
-    elif website_name == 'www.motion.com':
-        price_tag = soup.find('div', class_='price me-4p price-style ng-star-inserted')
-    elif website_name == 'usatoolsinc.com':
-        price_tag = soup.find('span', class_='price price--withoutTax')
-    elif website_name == 'www.grainger.com':
-        price_tag = soup.find('span', class_='rbqUOE lVwVq5')
-    elif website_name == 'www.coastaltool.com':
-        price_tag = soup.find('div', class_='price--main')
-    else:
-        price_tag = None
+    try: 
+        if website_name == 'www.homedepot.com':
+            price_tag = soup.find('div', class_='price')
+        elif website_name == 'www.motion.com':
+            price_tag = soup.find('div', class_='price me-4p price-style ng-star-inserted')
+        elif website_name == 'usatoolsinc.com':
+            price_tag = soup.find('span', class_='price price--withoutTax')
+        elif website_name == 'www.grainger.com':
+            price_tag = soup.find('span', class_='rbqUOE lVwVq5')
+        elif website_name == 'www.coastaltool.com':
+            price_tag = soup.find('div', class_='price--main')
+        else:
+            price_tag = None
+    except Exception as e:
+        print(f"Error finding price tag in HTML: {str(e)}")
+        return None
 
     if price_tag is not None:
-        return price_tag.text
+        try:
+            return price_tag.text
+        except Exception as e:
+            print(f"Error getting text from price tag: {str(e)}")
+            return None
     else:
         return None                        
 
@@ -144,40 +157,51 @@ for index, row in sku_test_df.iterrows():
             continue
 
         website_wait_times = {
-            'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
+            'https://www.homedepot.com/s/{model_number}?NCNI-5': 6,
             'https://www.motion.com/products/search;q={model_number};origin=search': 3,
-            'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 3,
+            'https://www.grainger.com/search?searchQuery={model_number}&searchBar=true': 4,
             'https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product': 3,
             'https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*': 3
         }
 
         for website in websites:
-            website_url = website.format(model_number=model_number)
-            driver.get(website_url)
-            
             wait_time = website_wait_times.get(website, 2)
             time.sleep(wait_time)
+
+            website_url = website.format(model_number=model_number)
+            driver.get(website_url)
 
             try:
                 driver.switch_to.alert.accept()
             except NoAlertPresentException:
                 pass
 
+            parsed_uri = urlparse(website_url)
+            website_name = '{uri.netloc}'.format(uri=parsed_uri)
+            website_name = website_name.replace("www.", "")  # remove www. part
+
+            try:
+                html_content = driver.page_source
+                price = get_price_from_html(html_content, website_name)
+            except Exception as e:
+                print(f"Error getting price from website {website}: {str(e)}")
+                price = None
+
             item_desc = str(row[item_desc_col_index])
-            website_name = website.split("//")[-1].split("/")[0]
-
             custom_website_name = website_names.get(website_name, website_name)
-
             item_desc = str(row[item_desc_col_index]).replace('\'', '_').replace('\"', '_')
+
+            screenshot_column_name = website_columns[website_name]
+            sku_test_df.at[index, screenshot_column_name] = website_url
+
+            price_column_name = price_columns[website_name]
+            sku_test_df.at[index, price_column_name] = price
 
             # Take a screenshot
             screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}_{custom_website_name}_{index}.png'
             driver.save_screenshot(screenshot_filename)
             add_watermark(screenshot_filename, item_number, item_desc)
             driver.delete_all_cookies()
-
-screenshot_column_name = website_columns[website_name]
-sku_test_df.at[index, screenshot_column_name] = website_url
 
 
 from openpyxl import load_workbook

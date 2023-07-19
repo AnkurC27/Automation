@@ -63,9 +63,19 @@ website_columns = {
     'www.coastaltool.com': 'Coastal_Link'
 }
 
-#watermark that adds a white border and a yellow highlight 
+# watermark that adds a white border and a yellow highlight 
 def add_watermark(screenshot_filename, item_number, item_desc):
     img = Image.open(screenshot_filename)
+
+    # width of the border in pixels
+    border_width = 10
+
+    #create a new image with size increased by twice the border width
+    new_img = Image.new("RGB", (img.width +2 * border_width, img.height +2 * border_width), "black")
+
+    # paste the original image at an offset of the border width
+    new_img.paste(img, (border_width, border_width))
+
     draw = ImageDraw.Draw(img)
     date_time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     watermark_text = f"{item_number}, {item_desc}, {date_time}"
@@ -146,8 +156,8 @@ for index, row in sku_test_df.iterrows():
             add_watermark(screenshot_filename, item_number, item_desc)
             driver.delete_all_cookies()
 
-screenshot_column_name = website_columns[website_name]
-sku_test_df.at[index, screenshot_column_name] = website_url
+            screenshot_column_name = website_columns[website_name]
+            sku_test_df.at[index, screenshot_column_name] = website_url
 
 
 from openpyxl import load_workbook
