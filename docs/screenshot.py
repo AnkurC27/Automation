@@ -152,7 +152,7 @@ for index, row in sku_test_df.iterrows():
 
             custom_website_name = website_names.get(website_name, website_name)
 
-            item_desc = str(row[item_desc_col_index]).replace('\'', '_').replace('\"', '_').replace('-', ' ')
+            item_desc = str(row[item_desc_col_index]).replace('\'', '_').replace('\"', '_').replace('-', ' ').replace('/', '_')
 
             # Take a screenshot
             screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}_{custom_website_name}_{index}.png'
