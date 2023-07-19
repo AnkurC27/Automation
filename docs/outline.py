@@ -64,6 +64,7 @@ website_columns = {
 }
 
 #Watermark that adds a white outline around the black font
+# also adds a black border around the image
 def add_watermark(screenshot_filename, item_number, item_desc):
     img = Image.open(screenshot_filename)
     draw = ImageDraw.Draw(img)
@@ -74,7 +75,6 @@ def add_watermark(screenshot_filename, item_number, item_desc):
     color = "black" 
     stroke_color = "white"
     stroke_width = 2
-
 
     # Get image and text dimensions
     img_width, img_height = img.size

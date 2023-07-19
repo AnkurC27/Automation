@@ -64,6 +64,7 @@ website_columns = {
 }
 
 # watermark that adds a white border and a yellow highlight 
+# also adds a black border around the image
 def add_watermark(screenshot_filename, item_number, item_desc):
     img = Image.open(screenshot_filename)
 
@@ -76,7 +77,7 @@ def add_watermark(screenshot_filename, item_number, item_desc):
     # paste the original image at an offset of the border width
     new_img.paste(img, (border_width, border_width))
 
-    draw = ImageDraw.Draw(img)
+    draw = ImageDraw.Draw(new_img)
     date_time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     watermark_text = f"{item_number}, {item_desc}, {date_time}"
     position = (10, 10)
@@ -90,13 +91,13 @@ def add_watermark(screenshot_filename, item_number, item_desc):
     img_width, img_height = img.size
     text_width, text_height = draw.textsize(watermark_text, font=font)
 
-    position = (img_width - text_width - 10, img_height - text_height -10)
+    position = (new_img.width - text_width - 10, new_img.height - text_height -10)
     padding = 10
 
     draw.rectangle([position[0]-padding, position[1]-padding, position[0]+text_width+padding, position[1]+text_height+padding], fill=background_color)
 
     draw.text(position, watermark_text, font=font, fill=color, stroke_width=stroke_width, stroke_fill=stroke_color)
-    img.save(screenshot_filename)
+    new_img.save(screenshot_filename)
 
 
 # Iterate over the rows in the Excel file
