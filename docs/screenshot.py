@@ -118,10 +118,13 @@ for index, row in sku_test_df.iterrows():
         except Exception as e:
             print(f"Could not create the directory. Error: {str(e)}")
 
-    for model_number in [model_number_1, model_number_2]:
+    model_numbers = [model_number_1, model_number_2]
+
+    for model_number in model_numbers:
         # Check if model number is not null before opening websites and taking screenshots
-        if not model_number or model_number.isspace():
+        if pd.isna(model_number) or not str(model_number).strip():
             continue
+        model_number = str(model_number)
 
         website_wait_times = {
             'https://www.homedepot.com/s/{model_number}?NCNI-5': 5,
