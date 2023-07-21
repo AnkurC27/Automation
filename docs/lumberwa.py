@@ -9,6 +9,7 @@ import os
 import time
 import datetime
 from urllib.parse import urlparse
+from PIL import Image, ImageDraw, ImageFont
 
 # load the excel file
 excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\linkswa.xlsx'
@@ -31,6 +32,41 @@ vendor_col_index_4 = lumber_df.columns.get_loc('Menards')
 item_col_index = lumber_df.columns.get_loc('Item#')
 desc_col_index = lumber_df.columns.get_loc('Description')
 
+def add_watermark(screenshot_filename, item_number, item_desc):
+    img = Image.open(screenshot_filename)
+
+    # width of the border in pixels
+    border_width = 10
+
+    #create a new image with size increased by twice the border width
+    new_img = Image.new("RGB", (img.width +2 * border_width, img.height +2 * border_width), "black")
+
+    # paste the original image at an offset of the border width
+    new_img.paste(img, (border_width, border_width))
+
+    draw = ImageDraw.Draw(new_img)
+    date_time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+    watermark_text = f"{item_number}, {item_desc}, {date_time}"
+    position = (10, 10)
+    font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 30)
+    color = "black" 
+    stroke_color = "white"
+    stroke_width = 2
+    background_color = "yellow"
+
+    # Get image and text dimensions
+    img_width, img_height = img.size
+    text_width, text_height = draw.textsize(watermark_text, font=font)
+
+    position = (new_img.width - text_width - 10, new_img.height - text_height -10)
+    padding = 10
+
+    draw.rectangle([position[0]-padding, position[1]-padding, position[0]+text_width+padding, position[1]+text_height+padding], fill=background_color)
+
+    draw.text(position, watermark_text, font=font, fill=color, stroke_width=stroke_width, stroke_fill=stroke_color)
+    new_img.save(screenshot_filename)
+
+
 # Iterate over the rows of the excel file
 for index, row in lumber_df.iterrows():
     vendor_1 = row[vendor_col_index]
@@ -43,7 +79,6 @@ for index, row in lumber_df.iterrows():
     if pd.isnull(item_number):
         break
 
-    
     vendors = [vendor_1, vendor_2, vendor_3, vendor_4]
     vendor_names = ['Dunn', 'HomeDepot', 'Chinook', 'Menards']
 
@@ -73,6 +108,8 @@ for index, row in lumber_df.iterrows():
         screenshot_filename = f'{folder_name}/{description}_{vendor_name}.png'
         driver.save_screenshot(screenshot_filename)
         driver.delete_all_cookies()
+
+
 
 
 
