@@ -32,7 +32,7 @@ vendor_col_index_4 = lumber_df.columns.get_loc('Menards')
 item_col_index = lumber_df.columns.get_loc('Item#')
 desc_col_index = lumber_df.columns.get_loc('Description')
 
-def add_watermark(screenshot_filename, item_number, item_desc):
+def add_watermark(screenshot_filename, item_number, description):
     img = Image.open(screenshot_filename)
 
     # width of the border in pixels
@@ -46,7 +46,7 @@ def add_watermark(screenshot_filename, item_number, item_desc):
 
     draw = ImageDraw.Draw(new_img)
     date_time = datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-    watermark_text = f"{item_number}, {item_desc}, {date_time}"
+    watermark_text = f"{item_number}, {description}, {date_time}"
     position = (10, 10)
     font = ImageFont.truetype("C:\\Windows\\Fonts\\arial.ttf", 30)
     color = "black" 
@@ -107,6 +107,7 @@ for index, row in lumber_df.iterrows():
         #Take a screenshot
         screenshot_filename = f'{folder_name}/{description}_{vendor_name}.png'
         driver.save_screenshot(screenshot_filename)
+        add_watermark(screenshot_filename, item_number, description)
         driver.delete_all_cookies()
 
 
