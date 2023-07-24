@@ -124,7 +124,7 @@ for index, row in lumber_df.iterrows():
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
-date_str = datetime.datetime.now().strftime("%-m.%-d.%Y")
+date_str = datetime.datetime.now().strftime("%m.%d.%Y")
 c = canvas.Canvas(f"Lumber Rates WA {date_str}.pdf", pagesize=letter)
 
 for screenshot_filename in screenshot_filenames:
