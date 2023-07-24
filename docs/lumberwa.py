@@ -100,7 +100,14 @@ for index, row in lumber_df.iterrows():
 
         print(f"Processing URL: {vendor_url}")   
         driver.get(vendor_url)
-        wait_time = 2
+        
+        # adds condition to menards url to solve captcha
+        wait_time = 3
+        if "chinooklumber.com" in vendor_url:
+            wait_time = 10
+        if "menards.com" in vendor_url:
+            wait_time = 15
+        
         time.sleep(wait_time)
 
         description = str(row[desc_col_index]).replace('\'', '_').replace('\"', '_').replace('-', ' ').replace('/', '_')
