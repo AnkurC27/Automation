@@ -1,1 +1,16 @@
-'https://www.bing.com/shop?q={model_number}&qs=n&form=SHOPSB&sp=-1&lq=0&pq=spt67m8-01&sc=0-10&sk=&cvid=CEC4A7799DFA4DBF9867A9C06C81D147&ghsh=0&ghacc=0&ghpl='
+Home Depot url: https://www.homedepot.com/s/{model_number}?NCNI-5
+USA Tools url: https://usatoolsinc.com/search.php?search_query=%E2%80%8E{model_number}&section=product
+Grainger url: https://www.grainger.com/search?searchQuery={model_number}&searchBar=true
+Coastal: https://www.coastaltool.com/search?type=article%2Cpage%2Cproduct&q={model_number}*
+Motion: https://www.motion.com/products/search;q={model_number};origin=search
+
+HTML identifiers for each website:
+
+Home Depot: <div class= "price">
+Motion Tools: <div _ngcontent-micomui-c138="" class="price me-4p price-style ng-star-inserted">$606.03</div>
+USA Tools: <span data-product-price-without-tax="" class="price price--withoutTax">$565.11</span>
+Grainger: <span class="rbqU0E lVwVq5" data-testid="pricing-component-410D10">$307.03</span>
+Coastal: <div class="price--main" data-price="">
+
+
+

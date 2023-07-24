@@ -63,18 +63,18 @@ website_columns = {
     'www.coastaltool.com': 'Coastal_Link'
 }
 
-# watermark that adds a white border and a yellow highlight 
+#Watermark that adds a white outline around the black font
 # also adds a black border around the image
 def add_watermark(screenshot_filename, item_number, item_desc):
     img = Image.open(screenshot_filename)
 
-    # width of the border in pixels
+    #width of border in pixels
     border_width = 10
 
-    #create a new image with size increased by twice the border width
+    # create a new image with size increased by twice the border width
     new_img = Image.new("RGB", (img.width +2 * border_width, img.height +2 * border_width), "black")
 
-    # paste the original image at an offset of the border width
+    # paste the original image at an offset of the border within
     new_img.paste(img, (border_width, border_width))
 
     draw = ImageDraw.Draw(new_img)
@@ -85,16 +85,12 @@ def add_watermark(screenshot_filename, item_number, item_desc):
     color = "black" 
     stroke_color = "white"
     stroke_width = 2
-    background_color = "yellow"
 
     # Get image and text dimensions
     img_width, img_height = img.size
     text_width, text_height = draw.textsize(watermark_text, font=font)
 
     position = (new_img.width - text_width - 10, new_img.height - text_height -10)
-    padding = 10
-
-    draw.rectangle([position[0]-padding, position[1]-padding, position[0]+text_width+padding, position[1]+text_height+padding], fill=background_color)
 
     draw.text(position, watermark_text, font=font, fill=color, stroke_width=stroke_width, stroke_fill=stroke_color)
     new_img.save(screenshot_filename)
@@ -152,7 +148,7 @@ for index, row in sku_test_df.iterrows():
 
             custom_website_name = website_names.get(website_name, website_name)
 
-            item_desc = str(row[item_desc_col_index]).replace('\'', '_').replace('\"', '_').replace('-', ' ').replace('/', '_')
+            item_desc = str(row[item_desc_col_index]).replace('\'', '_').replace('\"', '_')
 
             # Take a screenshot
             screenshot_filename = f'{folder_name}/{row["Item Number"]}_{item_desc}_{custom_website_name}_{index}.png'
@@ -186,5 +182,3 @@ book.close()
 
 # Close the web driver
 driver.quit()
-
-
