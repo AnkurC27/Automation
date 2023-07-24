@@ -127,8 +127,16 @@ from reportlab.lib.pagesizes import letter
 date_str = datetime.datetime.now().strftime("%m.%d.%Y")
 c = canvas.Canvas(f"Lumber Rates WA {date_str}.pdf", pagesize=letter)
 
+page_width, page_height = letter 
+
 for screenshot_filename in screenshot_filenames:
-    c.drawImage(screenshot_filename, 50, 500, width=500, height=300)
+    with Image.open(screenshot_filename) as img:
+        img_width, img_height = img.size
+
+    x = (page_width - img_width) / 2
+    y = (page_height - img_height) / 2
+
+    c.drawImage(screenshot_filename, x, y, width = img_width, height=img_height)
     c.showPage()
 
 c.save()
