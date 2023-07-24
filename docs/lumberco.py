@@ -24,9 +24,8 @@ driver.maximize_window()
 vendor_col_index = lumber_df.columns.get_loc('Menards')
 vendor_col_index_2 = lumber_df.columns.get_loc('Best')
 vendor_col_index_3 = lumber_df.columns.get_loc('HomeDepot')
-vendor_col_index_4 = lumber_df.columns.get_loc('Sutherlands')
-vendor_col_index_5 = lumber_df.columns.get_loc('WhiteCap')
-vendor_col_index_6 = lumber_df.columns.get_loc('Random')
+vendor_col_index_4 = lumber_df.columns.get_loc('WhiteCap')
+vendor_col_index_5 = lumber_df.columns.get_loc('Random')
 
 # get the column index of the 'Item Number' and 'Description' header
 item_col_index = lumber_df.columns.get_loc('Item#')
@@ -76,19 +75,18 @@ for index, row in lumber_df.iterrows():
     vendor_3 = row[vendor_col_index_3]
     vendor_4 = row[vendor_col_index_4]
     vendor_5 = row[vendor_col_index_5]
-    vendor_6 = row[vendor_col_index_6]
 
     item_number = str(row[item_col_index])
     description = str(row[desc_col_index])
     if pd.isnull(item_number):
         break
 
-    vendors = [vendor_1, vendor_2, vendor_3, vendor_4, vendor_5, vendor_6]
-    vendor_names = ['Menards', 'Best', 'HomeDepot', 'Sutherlands', 'WhiteCap', 'Random']
+    vendors = [vendor_1, vendor_2, vendor_3, vendor_4, vendor_5]
+    vendor_names = ['Menards', 'Best', 'HomeDepot', 'WhiteCap', 'Random']
 
     # create a folder with the date to store screenshots
     date_str = datetime.datetime.now().strftime("%m%d%Y")
-    folder_name = 'lumberwa_' + date_str
+    folder_name = 'lumberco_' + date_str
 
     if not os.path.exists(folder_name):
         try:
@@ -122,7 +120,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
 date_str = datetime.datetime.now().strftime("%-m.%-d.%Y")
-c = canvas.Canvas(f"Lumber Rates WA {date_str}.pdf", pagesize=letter)
+c = canvas.Canvas(f"Lumber Rates CO {date_str}.pdf", pagesize=letter)
 
 for screenshot_filename in screenshot_filenames:
     c.drawImage(screenshot_filename, 50, 500, width=500, height=300)
