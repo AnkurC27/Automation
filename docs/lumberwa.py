@@ -3,8 +3,6 @@ from selenium import webdriver
 from docx import Document
 from docx.shared import Inches
 from PIL import Image
-import keyboard
-import win32gui
 import os
 import time
 import datetime
@@ -31,6 +29,7 @@ vendor_col_index_4 = lumber_df.columns.get_loc('Menards')
 # get the column index of the 'Item Number' and 'Description' header
 item_col_index = lumber_df.columns.get_loc('Item#')
 desc_col_index = lumber_df.columns.get_loc('Description')
+
 
 def add_watermark(screenshot_filename, item_number, description):
     img = Image.open(screenshot_filename)
@@ -66,6 +65,7 @@ def add_watermark(screenshot_filename, item_number, description):
     draw.text(position, watermark_text, font=font, fill=color, stroke_width=stroke_width, stroke_fill=stroke_color)
     new_img.save(screenshot_filename)
 
+screenshot_filenames = []
 
 # Iterate over the rows of the excel file
 for index, row in lumber_df.iterrows():
@@ -98,6 +98,7 @@ for index, row in lumber_df.iterrows():
         if pd.isna(vendor_url) or not str(vendor_url).strip():
             continue
 
+        print(f"Processing URL: {vendor_url}")   
         driver.get(vendor_url)
         wait_time = 2
         time.sleep(wait_time)
@@ -109,6 +110,24 @@ for index, row in lumber_df.iterrows():
         driver.save_screenshot(screenshot_filename)
         add_watermark(screenshot_filename, item_number, description)
         driver.delete_all_cookies()
+
+        screenshot_filenames.append(screenshot_filename)
+
+# Paste screenshot to pdf 
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+
+date_str = datetime.datetime.now().strftime("%m%d%Y")
+c = canvas.Canvas(f"Lumber Rates WA {date_str}.pdf", pagesize=letter)
+
+for screenshot_filename in screenshot_filenames:
+    c.drawImage(screenshot_filename, 50, 500, width=500, height=300)
+    c.showPage()
+
+c.save()
+
+
+
 
 
 
