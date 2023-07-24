@@ -11,7 +11,7 @@ import os
 
 
 # Read model numbers from Excel file
-excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\linkswa.xlsx'  
+excel_file_path = r'C:\Users\ankur.chadha\Desktop\Automation\linksco.xlsx'  
 sku_test_df = pd.read_excel(excel_file_path)
 
 print(sku_test_df.columns)

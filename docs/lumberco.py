@@ -102,7 +102,12 @@ for index, row in lumber_df.iterrows():
 
         print(f"Processing URL: {vendor_url}")   
         driver.get(vendor_url)
-        wait_time = 2
+        
+        # adds condition to menards url to solve captcha
+        wait_time = 3
+        if "menards.com" in vendor_url:
+            wait_time = 15
+        
         time.sleep(wait_time)
 
         description = str(row[desc_col_index]).replace('\'', '_').replace('\"', '_').replace('-', ' ').replace('/', '_')
@@ -111,7 +116,6 @@ for index, row in lumber_df.iterrows():
         screenshot_filename = f'{folder_name}/{description}_{vendor_name}.png'
         driver.save_screenshot(screenshot_filename)
         add_watermark(screenshot_filename, item_number, description)
-        driver.delete_all_cookies()
 
         screenshot_filenames.append(screenshot_filename)
 
@@ -119,7 +123,7 @@ for index, row in lumber_df.iterrows():
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
-date_str = datetime.datetime.now().strftime("%-m.%-d.%Y")
+date_str = datetime.datetime.now().strftime("%m.%d.%Y")
 c = canvas.Canvas(f"Lumber Rates CO {date_str}.pdf", pagesize=letter)
 
 for screenshot_filename in screenshot_filenames:
